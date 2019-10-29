@@ -1,0 +1,66 @@
+package jpp.addressbook;
+
+import java.io.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Writer {
+
+    /**
+     * Exportiert alle Kontakte des Adressbuchs als Zeichenkette, die als Inhalt einer validen CSV-Datei gespeichert werden kann.
+     * Dabei sollen die Kontakte aufsteigend nach ID sortiert sein.
+     * Ist das Adressbuch leer, soll ein leerer String zurückgegeben werden.
+     * Verwenden Sie als Zeilen-Trennzeichen \n.
+     *
+     * @return alle Kontakte als String in CSV-Format mit aufsteigenden IDs
+     */
+
+    public static String export(Map<Integer, Contact> contactMap, List<Integer> ids) {
+        if (ids.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        for (Integer id : ids) {
+            Contact aktuell = contactMap.get(id);
+            sb.append(aktuell.getId()).append(";");                 //id
+            sb.append(aktuell.getSalutation()).append(";");         //Salutation
+            sb.append(aktuell.getFirstName()).append(";");          //First name
+            sb.append(aktuell.getLastName()).append(";");           //Last name
+            sb.append(formatter.format(aktuell.getBirthday())).append(";");     //birthday
+            sb.append(aktuell.getStreetAddress()).append(";");          //Street Address
+            sb.append(aktuell.getZipCode()).append(";");            //Zip Code
+            sb.append(aktuell.getCity()).append(";");               //City
+
+            String phoneNumber = aktuell.getPhone().isPresent() ? aktuell.getPhone().get().toString() : "";
+            sb.append(phoneNumber).append(";");
+
+            String mail = aktuell.getEMail().isPresent() ? aktuell.getEMail().get() : "";
+            sb.append(mail).append("\n");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    public static void main(String[] args) throws IOException {
+        String file = "18;Herr;Erich;Norman;08.07.1995;Straßburger Weg 36;98673;Bockstadt;368666697897;erich.norman@krautlook.com\n" +
+                "7;Herr;Danny;Schüller;20.05.1949;Rektoratsweg 200;57482;Wenden;276261530462;d.schueller@freemett.de\n" +
+                "4;Herr;Ian;Jacobs;17.02.1977;Teutonenstr. 126;52072;Aachen;24123269738;ian.jacobs@hotmeel.com\n" +
+                "4;Frau;Tabea;Carmen;03.09.1953;Erpeler Str. 57;73098;Rechberghausen;716130791825;tabea.carmen@bmx.de\n" +
+                "2;Frau;Milena;Schweizer;06.02.1994;Hoove 127;84032;Landshut;87138315030;milena.schweizer@t-offline.de\n" +
+                "9;Frau;Milena;Langhans;04.08.1936;Ossenkampstiege 151;34396;Liebenau;567627138759;m.langhans@t-offline.de";
+        File f = new File("TestFiles/TestWriter.txt");
+        OutputStream out = new FileOutputStream(f);
+        AddressBookImpl addressBook = new AddressBookImpl();
+        addressBook.importContacts(file);
+        Map<Integer, Contact> map = new HashMap<>();
+        Set<Contact> contacts = addressBook.getContacts();
+        for (Contact contact : contacts) {
+            map.put(contact.getId(), contact);
+        }
+        String test = addressBook.exportAllContacts();
+        out.write(test.getBytes());
+    }
+}

@@ -1,0 +1,144 @@
+package jpp.addressbook;
+
+import java.io.PrintStream;
+import java.util.*;
+import java.util.function.Consumer;
+
+public class AddressBookImpl implements AddressBook {
+
+    private Map<Integer, Contact> contacts = new HashMap<>();
+    private PrintStream printStream = System.err;
+    private List<Consumer<Contact>> contactAddedListner = new ArrayList<>();
+    private List<Consumer<Contact>> contactRemovedListner = new ArrayList<>();
+    public int added = 0;
+    public int overwritten = 0;
+//    private List<Consumer<Contact>> contactUpdatedListner = new ArrayList<>();
+
+
+    public void addContactAddedListner(Consumer<Contact> listner) {
+        contactAddedListner.add(listner);
+    }
+
+    public void addContactRemovedListner(Consumer<Contact> listner) {
+        contactRemovedListner.add(listner);
+    }
+
+
+    @Override
+    public void setErrorStream(PrintStream err) {
+        printStream = err;
+    }
+
+    @Override
+    public void importContacts(String input) {
+        added = 0;
+        overwritten = 0;
+        Reader reader = new Reader();
+        Map<Integer, Contact> temp = reader.readContacts(input, printStream);
+        temp.forEach((id, contact) -> {
+            contactAddedListner.forEach(c -> c.accept(contact));
+            if (contacts.get(id) != null){
+                overwritten++;
+            }else {
+                added++;
+            }
+            contacts.put(id,contact);
+        });
+    }
+
+    @Override
+    public void addContact(Contact contact) {
+        if (contact == null) {
+            throw new NullPointerException("Contanct ist null");
+        }
+        contactAddedListner.forEach(c -> c.accept(contact));
+        contacts.put(contact.getId(), contact);
+    }
+
+    @Override
+    public Optional<Contact> getContact(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("id ist kleiner oder gleich 0");
+        }
+        Optional<Contact> res = Optional.ofNullable(contacts.get(id));
+        return res;
+    }
+
+    @Override
+    public Set<Contact> getContacts() {
+        return new HashSet<>(contacts.values());
+    }
+
+    @Override
+    public void removeContact(int id) {
+        if (contacts.get(id) == null) {
+            throw new IllegalArgumentException("Contact is not in the map to be removed");
+        }
+        contactRemovedListner.forEach(c -> c.accept(getContact(id).get()));
+        contacts.remove(id);
+    }
+
+    @Override
+    public void removeContact(Contact contact) {
+        contactRemovedListner.forEach(c -> c.accept(contact));
+        contacts.remove(contact.getId());
+    }
+
+    @Override
+    public int getSmallestUnusedId() {
+        if (contacts.isEmpty()) {
+            return 1;
+        }
+//        ArrayList<Integer> temp = new ArrayList<Integer>(contacts.keySet());
+        int size = contacts.keySet().size();
+        for (int i = 1; i <= size; i++) {
+            if (contacts.get(i) == null) {
+                return i;
+            }
+        }
+        return size + 1;
+//        Collections.sort(temp);
+//        if (temp.get(0) != 1){
+//            return 1;
+//        }
+//        else {
+//            int size = temp.size();
+//            for (int i = 0; i < size - 1;i++) {
+//                int first = temp.get(i);
+//                if (temp.get(i+1) != first + 1){
+//                    return i+1;
+//                }
+//            }
+//            return temp.get(size-1) + 1;
+//        }
+    }
+
+    @Override
+    public String exportAllContacts() {
+        ArrayList<Integer> ids = new ArrayList<>(contacts.keySet());
+        Collections.sort(ids);
+        return Writer.export(contacts, ids);
+    }
+
+    @Override
+    public String exportMultipleContacts(Set<Integer> set) {
+        for (Integer id : set) {
+            if (contacts.get(id) == null) {
+                throw new IllegalArgumentException("the Contact with id:" + id + " is not in the map");
+            }
+        }
+        ArrayList<Integer> ids = new ArrayList<>(set);
+        Collections.sort(ids);
+        return Writer.export(contacts, ids);
+    }
+
+    @Override
+    public String exportSingleContact(int id) {
+        if (contacts.get(id) == null) {
+            throw new IllegalArgumentException("the Contact with id:" + id + " is not in the map ");
+        }
+        ArrayList<Integer> temp = new ArrayList<>();
+        temp.add(id);
+        return Writer.export(contacts, temp);
+    }
+}

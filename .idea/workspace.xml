@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bc6c3f9b-e980-462a-951a-d0a4e04dd275" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/jpp/addressbook/AddressBookImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jpp/addressbook/AddressBookImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/AddressBookApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/AddressBookApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/YesNoAlertBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/YesNoAlertBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/sample.fxml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>house</find>
+      <find>;</find>
+      <find>table</find>
+      <find>choice</find>
+      <find>addressBook.add</find>
+      <find>FXCollections</find>
+      <find>sort</find>
+      <find>And</find>
+      <find>prefix</find>
+      <find>System</find>
+      <find>red</find>
+      <find>if</find>
+      <find>show(</find>
+      <find>YesNo</find>
+      <find>Delete</find>
+      <find>LocalDate.</find>
+      <find>Period</find>
+      <find>YesNoAler</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>;</replace>
+    </replaceStrings>
+  </component>
+  <component name="ProjectId" id="1QLCWfeyP9snDUteOj0MyOXPrYL" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554399294715" />
+    <property name="last.edited.regexp" value="milena.schweizer@hotmeel.com" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Masjid" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15429688" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="main.java.jpp.addressbook" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.AddressBookApplication">
+    <configuration name="AddressBookApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="jpp.addressbook.gui.AddressBookApplication" />
+      <module name="AdressBuch" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-11.0.2\javafx-sdk-11.0.2\lib&quot;  --add-modules=javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="jpp.addressbook.gui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AddressBookUtilImpl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="jpp.addressbook.AddressBookUtilImpl" />
+      <module name="AdressBuch" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="jpp.addressbook.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Reader (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="jpp.addressbook.Reader" />
+      <module name="AdressBuch" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="jpp.addressbook.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Reader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.java.jpp.addressbook.Reader" />
+      <module name="AdressBuch" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.java.jpp.addressbook.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Reader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="jpp.addressbook.Reader" />
+      <module name="AdressBuch" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="jpp.addressbook.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Writer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="jpp.addressbook.Writer" />
+      <module name="AdressBuch" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="jpp.addressbook.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.AddressBookApplication" />
+      <item itemvalue="Application.AddressBookUtilImpl" />
+      <item itemvalue="Application.Reader" />
+      <item itemvalue="Application.Writer" />
+      <item itemvalue="Application.Reader (1)" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Reader (1)" />
+        <item itemvalue="Application.Reader" />
+        <item itemvalue="Application.AddressBookUtilImpl" />
+        <item itemvalue="Application.Writer" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\s353177\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\s353177\IdeaProjects\AdressBuch" />
+          <option name="myCopyRoot" value="C:\Users\s353177\IdeaProjects\AdressBuch" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\s353177\IdeaProjects\AdressBuch" />
+          <option name="myCopyRoot" value="C:\Users\s353177\IdeaProjects\AdressBuch" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bc6c3f9b-e980-462a-951a-d0a4e04dd275" name="Default Changelist" comment="" />
+      <created>1553272154663</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1553272154663</updated>
+      <workItem from="1553272155901" duration="17831000" />
+      <workItem from="1553345422508" duration="8658000" />
+      <workItem from="1553366568740" duration="3742000" />
+      <workItem from="1553381927130" duration="4000" />
+      <workItem from="1553434960152" duration="10021000" />
+      <workItem from="1553513608668" duration="2596000" />
+      <workItem from="1553525505862" duration="19666000" />
+      <workItem from="1553558638039" duration="2379000" />
+      <workItem from="1553598404318" duration="18125000" />
+      <workItem from="1553689429543" duration="10057000" />
+      <workItem from="1553716278798" duration="5773000" />
+      <workItem from="1553767205311" duration="13561000" />
+      <workItem from="1553813211472" duration="2864000" />
+      <workItem from="1553852067401" duration="880000" />
+      <workItem from="1553853102993" duration="2099000" />
+      <workItem from="1553868045207" duration="174000" />
+      <workItem from="1553868297243" duration="17000" />
+      <workItem from="1553868473573" duration="6652000" />
+      <workItem from="1553948066014" duration="2974000" />
+      <workItem from="1553954206172" duration="12299000" />
+      <workItem from="1553978457616" duration="4747000" />
+      <workItem from="1554036108221" duration="1537000" />
+      <workItem from="1554047717902" duration="3561000" />
+      <workItem from="1554113042074" duration="13734000" />
+      <workItem from="1554146340729" duration="4891000" />
+      <workItem from="1554158254701" duration="662000" />
+      <workItem from="1554207230230" duration="2738000" />
+      <workItem from="1554211699054" duration="15738000" />
+      <workItem from="1554286740070" duration="70000" />
+      <workItem from="1554286954693" duration="5447000" />
+      <workItem from="1554299910034" duration="263000" />
+      <workItem from="1554300350596" duration="480000" />
+      <workItem from="1554300860371" duration="687000" />
+      <workItem from="1554301647865" duration="290000" />
+      <workItem from="1554301983029" duration="1137000" />
+      <workItem from="1554313882869" duration="3970000" />
+      <workItem from="1554370704472" duration="12992000" />
+      <workItem from="1554402658264" duration="606000" />
+      <workItem from="1554627466409" duration="487000" />
+      <workItem from="1555078559404" duration="485000" />
+      <workItem from="1555422910734" duration="126000" />
+      <workItem from="1555851640803" duration="573000" />
+      <workItem from="1557915752992" duration="115000" />
+      <workItem from="1558732505427" duration="76000" />
+      <workItem from="1558732710387" duration="314000" />
+      <workItem from="1560425794194" duration="1114000" />
+      <workItem from="1560444867240" duration="220000" />
+      <workItem from="1567540524191" duration="182000" />
+      <workItem from="1572357634896" duration="4000" />
+      <workItem from="1572357664419" duration="1056000" />
+    </task>
+    <task id="LOCAL-00001" summary="reader">
+      <created>1553542438081</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1553542438081</updated>
+    </task>
+    <task id="LOCAL-00002" summary="reader">
+      <created>1553543056594</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1553543056594</updated>
+    </task>
+    <task id="LOCAL-00003" summary="reader">
+      <created>1553543312200</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1553543312200</updated>
+    </task>
+    <task id="LOCAL-00004" summary="reader">
+      <created>1553549216998</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1553549216998</updated>
+    </task>
+    <task id="LOCAL-00005" summary="reader">
+      <created>1553550560094</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1553550560094</updated>
+    </task>
+    <task id="LOCAL-00006" summary="reader">
+      <created>1553550758084</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1553550758084</updated>
+    </task>
+    <task id="LOCAL-00007" summary="reader">
+      <created>1553551973930</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1553551973930</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Writer">
+      <created>1553598520365</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1553598520365</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Writer">
+      <created>1553600382438</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1553600382438</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Writer">
+      <created>1553600661344</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1553600661344</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Writer">
+      <created>1553600755373</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1553600755373</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Util">
+      <created>1553615797881</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1553615797881</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Util">
+      <created>1553616246937</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1553616246937</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Util">
+      <created>1553619616554</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1553619616554</updated>
+    </task>
+    <task id="LOCAL-00015" summary="mit GUI">
+      <created>1554301762095</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1554301762096</updated>
+    </task>
+    <task id="LOCAL-00016" summary="mit GUI">
+      <created>1554301811119</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1554301811119</updated>
+    </task>
+    <task id="LOCAL-00017" summary="mit GUI">
+      <created>1554301932704</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1554301932704</updated>
+    </task>
+    <task id="LOCAL-00018" summary="mit GUI">
+      <created>1554302075866</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1554302075867</updated>
+    </task>
+    <task id="LOCAL-00019" summary="mit GUI">
+      <created>1554381283074</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1554381283074</updated>
+    </task>
+    <task id="LOCAL-00020" summary="mit GUI">
+      <created>1554382224752</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1554382224752</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
+    <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="reader" />
+    <MESSAGE value="Writer" />
+    <MESSAGE value="Util" />
+    <MESSAGE value="mit GUI" />
+    <option name="LAST_COMMIT_MESSAGE" value="mit GUI" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/jpp/addressbook/gui/ThreeButtonAlertBox.java</url>
+          <line>16</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://C:/Program Files/Java/javafx-sdk-11.0.2/javafx-sdk-11.0.2/lib/javafx.graphics.jar!/javafx/animation/Animation.class</url>
+          <line>567</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/jpp/addressbook/AddressBookUtilImpl.java</url>
+          <line>18</line>
+          <properties class="jpp.addressbook.AddressBookUtilImpl" method="getAverageAgeAt">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>10</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>AdressBuch</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>10</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>javafx-sdk-11.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

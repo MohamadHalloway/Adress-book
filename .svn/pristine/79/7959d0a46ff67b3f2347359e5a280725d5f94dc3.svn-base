@@ -1,0 +1,235 @@
+package jpp.addressbook;
+
+import java.awt.*;
+import java.io.PrintStream;
+import java.security.KeyPair;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Reader {
+//    private static Pattern id = Pattern.compile("\\s*\\d+;");
+//    private static Pattern firstName = Pattern.compile(";[a-zA-Z\\u00c4\\u00e4\\u00d6\\u00f6\\u00dc\\u00fc\\u00df]+;");
+//    private static Pattern lastName = Pattern.compile(";[a-zA-Z\\u00c4\\u00e4\\u00d6\\u00f6\\u00dc\\u00fc\\u00df]+;");
+//    private static Pattern birthday = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
+//    private static Pattern streetAndHouseNumber = Pattern.compile(";.+\\s\\d+;");
+    private int lineNumber;
+    private boolean invalid = false;
+    private int id;
+    private Salutation salutation;
+    private String firsName;
+    private String lastName;
+    private LocalDate birthday;
+    private String streetHouse;
+    private int zipCode;
+    private String city;
+    private Optional<Long> phone;
+    private Optional<String> email;
+
+    private PrintStream stream;
+
+    Map<Integer, Contact> readContacts(String input, PrintStream stream) {
+        this.stream = stream;
+        Map<Integer, Contact> tempMap = new HashMap<>();
+
+        String[] lines = input.split("(\\n|(\\r\\n)|\\r)");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        Pattern mailPattern = Pattern.compile("[\\w\\d\\.]+\\@[\\w\\d\\-]+\\.[\\w\\d]+");
+
+        for(int i = 0; i < lines.length; i++) {
+            lineNumber = i + 1;
+            String line = lines[i];
+
+            int anzahlSemikolon = line.length() - line.replace(";", "").length();
+            if (line.isEmpty() || anzahlSemikolon != 9) {
+                stream.println("import error: line " + (i + 1) + " must contain exactly 10 columns");
+                continue;
+            }
+            String[] columns  = splitSimikolon(line);
+//            Pattern semikolon = Pattern.compile("[\\w\\-\\@\\h\\.\\u00c4\\u00e4\\u00d6\\u00f6\\u00dc\\u00fc\\u00df]*;?");
+//            Matcher matcher = semikolon.matcher(line);
+            int j = 0;
+
+            while (j < columns.length) {
+                String temp = columns[j];
+//                if (temp.isEmpty() && j != 9) {
+//                    continue;
+//                }
+//                if (j != 9){
+//                    temp = temp.substring(0,temp.length()-1);
+//                }
+                switch (j) {
+                    case 0:             //id
+                        id = check_id(temp,"id");
+                        break;
+                    case 1:
+                        salutation = check_salutation(temp);
+                        break;
+                    case 2:
+                        firsName = check_empty(temp,"first name");
+                        break;
+                    case 3:
+                        lastName = check_empty(temp,"last name");
+                        break;
+                    case 4:
+                        birthday = check_birthday(temp,formatter);
+                        break;
+                    case 5:
+                        streetHouse = check_empty(temp,"street address");
+                        break;
+                    case 6:
+                        zipCode = check_id(temp,"zip code");
+                        break;
+                    case 7:
+                        city = check_empty(temp,"city");
+                        break;
+                    case 8:
+                        phone = check_phoneNumber(temp);
+                        break;
+                    case 9:
+                        email = check_email(temp,mailPattern);
+                        break;
+                }
+                j++;
+                if (invalid) {
+                    break;
+                }
+            }
+            if (invalid){
+                invalid = false;
+                continue;
+            }
+            ContactImpl contact = new ContactImpl(id,salutation,firsName,lastName,birthday,streetHouse,zipCode,city,phone,email);
+            tempMap.put(id,contact);
+        }
+        return tempMap;
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private int check_id(String temp,String var) {
+        if (temp.isEmpty()) {
+            temp = "empty";
+        }
+        try {
+            int res = Integer.parseInt(temp);
+            if (res < 1) {
+                throw new IllegalArgumentException();
+            }
+            return res;
+        }catch(Exception e){
+            invalid = true;
+            stream.println("import error: invalid value for " + var + ": " + temp + " in line " + lineNumber);
+            return 0;
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private Salutation check_salutation(String temp) {
+        if (temp.equals(Salutation.HERR.toString())) {
+            return Salutation.HERR;
+        } else if (temp.equals(Salutation.FRAU.toString())) {
+            return Salutation.FRAU;
+        } else {
+            if (temp.isEmpty()) {
+                temp = "empty";
+            }
+            invalid = true;
+            stream.println("import error: invalid value for salutation: " + temp + " in line " + lineNumber);
+            return null;
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private String check_empty(String temp,String var) {
+        if (!temp.isEmpty()) {
+            return temp;
+        }else{
+            invalid = true;
+            stream.println("import error: invalid value for " + var + ": empty in line " + lineNumber);
+            return temp;
+        }
+
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private LocalDate check_birthday(String temp, DateTimeFormatter formatter){
+        try {
+            return LocalDate.parse(temp,formatter);
+        }catch (Exception e){
+            if (temp.isEmpty()){
+                temp = "empty";
+            }
+            invalid = true;
+            stream.println("import error: invalid value for birthday: " + temp + " in line " + lineNumber);
+            return null;
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private Optional<Long> check_phoneNumber(String temp) {
+        if (temp.isEmpty()){
+            return Optional.empty();
+        }else{
+            try {
+                Long res = Long.parseLong(temp);
+                if (res < 1) {
+                    throw new IllegalArgumentException();
+                }
+                return Optional.of(res);
+            } catch (Exception e) {
+                invalid = true;
+                stream.println("import error: invalid value for phone number: " + temp + " in line " + lineNumber);
+                return null;
+            }
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private Optional<String> check_email(String temp, Pattern mailPattern) {
+
+        temp = temp.replaceAll("\\s","");
+        if (temp.isEmpty()){
+            return Optional.empty();
+        }
+            Matcher matcher = mailPattern.matcher(temp);
+        if (matcher.find()){
+            return Optional.of(matcher.group());
+        }else {
+            invalid = true;
+            stream.println("import error: invalid value for email: " + temp + " in line " + lineNumber);
+            return null;
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------------------
+    private String[] splitSimikolon(String s){
+        String[] res = new String[10];
+        int index = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char test = s.charAt(i);
+            sb.append(test);
+            if (test == ';'){
+                sb.deleteCharAt(sb.length() - 1);
+                res[index] = sb.toString();
+                sb = new StringBuilder();
+                index++;
+            }
+            if (i == s.length() - 1){
+                res[index] = sb.toString();
+            }
+        }
+        return res;
+    }
+
+
+    public static void main(String[] args) {
+        String file ="18;Herr;Erich;Norman;08.07.1995;Straßburger Weg 36;98673;Bockstadt;368666697897;erich.norman@krautlook.com\n" +
+                "7;Herr;Danny;Schüller;20.05.1949;Rektoratsweg 200;57482;Wenden;276261530462;d.schueller@freemett.de\n" +
+                "Herr;Ian;Jacobs;17.02.1977;Teutonenstr. 126;52072;Aachen;24123269738;ian.jacobs@hotmeel.com\n" +
+                "4;Frau;Tabea;Carmen;03.09.1953;Erpeler Str. 57;73098;Rechberghausen;716130791825;tabea.carmen@bmx.de\n" +
+                "2;Frau;Milena;Schweizer;06.02.1994;Hoove 127;84032;Landshut;87138315030;milena.schweizer@hotmeel.com\n" +
+                "9;Frau;Milen a;Langhans;04.08.1936;Ossenkampstiege 151;34396;Liebenau;567627138759;m.langhans@t-offline.de";
+        Reader reader = new Reader();
+        Map<Integer,Contact> test = reader.readContacts(file,System.err);
+        System.out.println(true);
+    }
+
+}

@@ -1,0 +1,193 @@
+package jpp.addressbook;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.Year;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class AddressBookUtilImpl implements AddressBookUtil {
+    private AddressBook addressBook;
+
+    public AddressBookUtilImpl(AddressBook addressBook) {
+        this.addressBook = addressBook;
+    }
+
+    @Override
+    public double getAverageAgeAt(LocalDate reference) {
+        Set<Contact> contacts = addressBook.getContacts();
+        if (contacts.isEmpty()){
+            throw new IllegalStateException("address book has no contacts");
+        }
+
+        ArrayList<LocalDate> list = new ArrayList<>();
+        for (Contact contact : contacts){
+            list.add(contact.getBirthday());
+        }
+        Collections.sort(list);
+        for (LocalDate date: list){
+            if (date.isAfter(reference)){
+                throw new IllegalArgumentException("reference is not valid");
+            }
+        }
+
+        double summe = 0;
+        for (LocalDate date: list){
+            System.out.println(summe + ";" + date);
+            summe += Period.between(date,reference).getYears();
+        }
+        System.out.println(summe);
+        return summe/list.size();
+    }
+
+    @Override
+    public double getSalutationShare(Salutation salutation) {
+        Set<Contact> contacts = addressBook.getContacts();
+        if (contacts.isEmpty()){
+            throw new IllegalStateException("address book has no contacts");
+        }
+        double res = 0;
+        for (Contact contact: contacts){
+            if (contact.getSalutation().equals(salutation)){
+                res++;
+            }
+        }
+        return res * ((double)1/contacts.size());
+    }
+
+    @Override
+    public Map<String, Double> getMailProviderShare() {
+        Set<Contact> contacts = addressBook.getContacts();
+        if (contacts.isEmpty()){
+            throw new IllegalStateException("address book has no contacts");
+        }
+        Map<String,Double> result = new HashMap<>();
+        Pattern mail = Pattern.compile("@.+");
+        double summe = 0;
+        for (Contact contact : contacts){
+            String temp = "";
+            Optional<String> email = contact.getEMail();
+            if (email.isPresent()){
+                Matcher matcher = mail.matcher(email.get());
+                matcher.find();
+                temp = matcher.group();
+                temp = temp.substring(1);
+            }
+            if (result.containsKey(temp)){
+                result.replace(temp,result.get(temp)+1);
+            }else {
+                result.put(temp,1.0);
+            }
+            summe++;
+        }
+        summe = 1/summe;
+        for (String key:result.keySet()){
+            result.replace(key,result.get(key) * summe);
+        }
+        return result;
+    }
+
+    @Override
+    public Predicate<Contact> lastNamePrefixFilter(String prefix) {
+        if (prefix == null){
+            throw new NullPointerException("präfix ist null");
+        }
+        Predicate<Contact> result = new Predicate<>() {
+            Pattern prä = Pattern.compile("^"+prefix);
+            @Override
+            public boolean test(Contact contact) {
+                Matcher matcher = prä.matcher(contact.getLastName());
+                return matcher.find();
+            }
+        };
+        return result;
+    }
+
+    @Override
+    public Predicate<Contact> birthYearFilter(Year year) {
+        return contact -> contact.getBirthday().getYear() == year.getValue();
+    }
+
+    @Override
+    public Predicate<Contact> zipCodeFilter(int zipCode) {
+        if (zipCode < 1){
+            throw new IllegalArgumentException("zipCode is invalid");
+        }
+        return contact -> contact.getZipCode() == zipCode;
+    }
+
+    @Override
+    public Predicate<Contact> eMailInfixFilter(String infix) {
+        if(infix == null){
+            throw new NullPointerException("infix is null");
+        }
+        return contact -> {
+
+            Optional<String> temp = contact.getEMail();
+            if (!temp.isPresent()){
+                return infix.equals("");
+            }
+            return temp.get().contains(infix);
+        };
+    }
+
+    @Override
+    public Set<Contact> filter(Predicate<Contact> filter) {
+        Set<Contact> result = new HashSet<>();
+        for (Contact contact : addressBook.getContacts()){
+            if (filter.test(contact)){
+                result.add(contact);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Set<Contact> filterAnd(Set<Predicate<Contact>> filters) {
+        Set<Contact> result = new HashSet<>();
+        for (Contact contact:addressBook.getContacts()){
+            boolean treffer = true;
+            for (Predicate<Contact> predicate : filters){
+                if (!predicate.test(contact)){
+                    treffer = false;
+                    break;
+                }
+            }
+            if (treffer){
+                result.add(contact);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Set<Contact> filterOr(Set<Predicate<Contact>> filters) {
+        if (filters.isEmpty()){
+            return addressBook.getContacts();
+        }
+        Set<Contact> result = new HashSet<>();
+        for (Contact contact:addressBook.getContacts()){
+            for (Predicate<Contact> predicate : filters){
+                if (predicate.test(contact)){
+                    result.add(contact);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        String test = "4;Frau;Tabea;Carmen;03.09.1953;Erpeler Str. 57;73098;Rechberghausen;716130791825;tabea.carmen@bmx.de\n"+
+                "14;Frau;Marina;Bade;17.09.1974;Zur Gräfte 28;97249;Eisingen;930679864745;m.bade@krautlook.com\n"+
+                "5;Herr;Ian;Jacobs;17.02.1977;Teutonenstr. 126;52072;Aachen;24123269738;ian.jacobs@hotmeel.com\n"+
+                "18;Herr;Erich;Norman;08.07.1995;Straßburger Weg 36;98673;Bockstadt;368666697897;erich.norman@krautlook.com\n";
+        AddressBookImpl addressBook = new AddressBookImpl();
+        addressBook.importContacts(test);
+        AddressBookUtilImpl addressBookUtil = new AddressBookUtilImpl(addressBook);
+        LocalDate date = LocalDate.of(2019,2,22);
+        System.out.println(addressBookUtil.getAverageAgeAt(date));
+    }
+}

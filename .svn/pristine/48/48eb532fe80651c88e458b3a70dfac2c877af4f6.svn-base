@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="root" prefHeight="661.0" prefWidth="944.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jpp.addressbook.gui.Controller">
+   <children>
+      <TableView fx:id="table" layoutY="31.0" prefHeight="476.0" prefWidth="482.0">
+        <columns>
+            <TableColumn fx:id="salutationColumn" prefWidth="118.0" text="Salutation" />
+          <TableColumn fx:id="firstNameColumn" prefWidth="189.0" text="First name" />
+          <TableColumn fx:id="lastNameColumn" prefWidth="174.0" text="Last name" />
+        </columns>
+      </TableView>
+      <RadioButton fx:id="ANDRadioButton" layoutX="62.0" layoutY="517.0" mnemonicParsing="false" text="AND">
+         <toggleGroup>
+            <ToggleGroup fx:id="AndOr" />
+         </toggleGroup></RadioButton>
+      <MenuBar fx:id="MenuFile" prefHeight="32.0" prefWidth="944.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="importButton" mnemonicParsing="false" text="Import" />
+                  <MenuItem fx:id="exportButton" mnemonicParsing="false" text="Export" />
+                  <MenuItem fx:id="showStatisticsButton" mnemonicParsing="false" text="show statistics" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Label layoutX="500.0" layoutY="43.0" prefHeight="21.0" prefWidth="80.0" text="Salutation:" />
+      <ChoiceBox fx:id="choiceBox" layoutX="615.0" layoutY="38.0" prefHeight="31.0" prefWidth="169.0" />
+      <Label layoutX="500.0" layoutY="85.0" prefHeight="21.0" prefWidth="88.0" text="First name:" />
+      <Label layoutX="500.0" layoutY="126.0" text="Last name:" />
+      <TextField fx:id="firstNameText" layoutX="615.0" layoutY="80.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter first name" />
+      <TextField fx:id="lastNameText" layoutX="615.0" layoutY="121.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter last name" />
+      <Label layoutX="500.0" layoutY="164.0" prefHeight="21.0" prefWidth="71.0" text="Birthday:" />
+      <DatePicker fx:id="birthdayDatePicker" layoutX="615.0" layoutY="159.0" prefHeight="31.0" prefWidth="250.0" promptText="choose birthday" />
+      <Label layoutX="500.0" layoutY="201.0" prefHeight="21.0" prefWidth="104.0" text="Street address:" />
+      <TextField fx:id="streetAddressText" layoutX="615.0" layoutY="196.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter street address" />
+      <TextField fx:id="zipCodeText" layoutX="615.0" layoutY="237.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter zip code" />
+      <TextField fx:id="cityText" layoutX="615.0" layoutY="275.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter city" />
+      <TextField fx:id="emailText" layoutX="615.0" layoutY="313.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter email address (optional)" />
+      <TextField fx:id="phoneText" layoutX="615.0" layoutY="353.0" prefHeight="31.0" prefWidth="287.0" promptText="Enter phone number (optional)" />
+      <Label layoutX="500.0" layoutY="242.0" text="Zip code:" />
+      <Label layoutX="500.0" layoutY="280.0" text="City:" />
+      <Label layoutX="500.0" layoutY="318.0" text="E-Mail:" />
+      <Label layoutX="500.0" layoutY="358.0" text="Phone:" />
+      <Button fx:id="newButton" layoutX="513.0" layoutY="406.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="63.0" text="New" />
+      <Button fx:id="deleteButton" layoutX="604.0" layoutY="406.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="63.0" text="Delete" />
+      <Label layoutX="14.0" layoutY="517.0" text="Filter:" />
+      <RadioButton fx:id="ORRadioButton" layoutX="131.0" layoutY="517.0" mnemonicParsing="false" text="OR" toggleGroup="$AndOr" />
+      <CheckBox fx:id="lastNamePrefixCheckBox" layoutX="18.0" layoutY="551.0" mnemonicParsing="false" />
+      <CheckBox fx:id="yearOfBirthCheckBox" layoutX="433.0" layoutY="551.0" mnemonicParsing="false" />
+      <CheckBox fx:id="zipCodeCheckBox" layoutX="18.0" layoutY="592.0" mnemonicParsing="false" />
+      <Label layoutX="62.0" layoutY="551.0" text="Last name prefix:" />
+      <Label layoutX="477.0" layoutY="551.0" text="Year of birth:" />
+      <Label layoutX="62.0" layoutY="592.0" text="Zip code:" />
+      <TextField fx:id="lastNameprefixText" layoutX="195.0" layoutY="546.0" />
+      <TextField fx:id="yearOfBirthText" layoutX="610.0" layoutY="546.0" />
+      <TextField fx:id="zipCodePredicateText" layoutX="195.0" layoutY="587.0" />
+      <Label layoutX="479.0" layoutY="592.0" prefHeight="21.0" prefWidth="88.0" text="E-Mail infix:" />
+      <CheckBox fx:id="emailInifixCheckBox" layoutX="433.0" layoutY="592.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="22.0" />
+      <TextField fx:id="emailInfixText" layoutX="610.0" layoutY="587.0" />
+   </children>
+</AnchorPane>

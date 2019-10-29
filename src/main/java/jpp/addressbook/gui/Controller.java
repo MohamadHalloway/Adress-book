@@ -1,0 +1,654 @@
+package jpp.addressbook.gui;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import jpp.addressbook.*;
+import jpp.addressbook.Writer;
+
+import java.io.*;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.Year;
+import java.util.*;
+import java.util.function.Predicate;
+
+public class Controller implements Initializable {
+    @FXML
+    public CheckBox emailInifixCheckBox;
+
+    @FXML
+    public TextField emailInfixText;
+    @FXML
+    private Button deleteButton;
+
+    @FXML
+    private TableColumn<Contact, String> firstNameColumn;
+
+    @FXML
+    private TextField emailText;
+
+    @FXML
+    private MenuBar MenuFile;
+
+    @FXML
+    private TextField firstNameText;
+
+    @FXML
+    private TextField zipCodeText;
+
+    @FXML
+    private TextField phoneText;
+
+    @FXML
+    private CheckBox zipCodeCheckBox;
+
+    @FXML
+    private AnchorPane root;
+
+    @FXML
+    private MenuItem importButton;
+
+    @FXML
+    private TableView<Contact> table;
+
+    @FXML
+    private TableColumn<Contact, Salutation> salutationColumn;
+
+    @FXML
+    private TextField yearOfBirthText;
+
+    @FXML
+    private TextField streetAddressText;
+
+    @FXML
+    private DatePicker birthdayDatePicker;
+
+    @FXML
+    private RadioButton ANDRadioButton;
+
+    @FXML
+    private TextField lastNameText;
+
+    @FXML
+    private MenuItem showStatisticsButton;
+
+    @FXML
+    private TextField lastNameprefixText;
+
+    @FXML
+    private CheckBox yearOfBirthCheckBox;
+
+    @FXML
+    private MenuItem exportButton;
+
+    @FXML
+    private TextField zipCodePredicateText;
+
+    @FXML
+    private RadioButton ORRadioButton;
+
+    @FXML
+    private ChoiceBox<String> choiceBox = new ChoiceBox<>();
+
+    @FXML
+    private Button newButton;
+
+    @FXML
+    private TableColumn<Contact, String> lastNameColumn;
+
+    @FXML
+    private ToggleGroup AndOr;
+
+    @FXML
+    private TextField cityText;
+
+    @FXML
+    private CheckBox lastNamePrefixCheckBox;
+
+    //ToolTips
+    private Tooltip salutationTooltip;
+    private Tooltip emptyTooltip;
+    private Tooltip birthdayTooltip;
+    private Tooltip zipCodeTooltip;
+    private Tooltip emailTooltip;
+    private Tooltip phoneTooltip;
+
+//    public static boolean sureImport = true;
+    private static Stage primaryStage;
+    private AddressBookImpl addressBook = new AddressBookImpl();
+    private AddressBookUtilImpl bookUtil = new AddressBookUtilImpl(addressBook);
+    private Comparator<Contact> contactComparator = (o1, o2) -> o1.getId() > o2.getId() ? 1 : -1;
+    private boolean OR = true;
+    private final Duration duration = new Duration(2000);
+    private final Duration showDuration = new Duration(2000);
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        initChoiceBox();
+        initTable();
+        initToolTips();
+        initTextFields();
+        initImportButton();
+        initDeleteButton();
+        initNewButton();
+        initExportButton();
+        initStatisticsButton();
+        initAndOr();
+        initFilters();
+    }
+
+    public static void setStage(Stage stage) {
+        primaryStage = stage;
+    }
+
+    private void initFilters() {
+        zipCodeCheckBox.setOnMouseClicked(e -> filter());
+        yearOfBirthCheckBox.setOnMouseClicked(e -> filter());
+        lastNamePrefixCheckBox.setOnMouseClicked(e -> filter());
+        emailInifixCheckBox.setOnMouseClicked(e -> filter());
+        zipCodePredicateText.setOnKeyReleased(e -> filter());
+        yearOfBirthText.setOnKeyReleased(e -> filter());
+        lastNameprefixText.setOnKeyReleased(e -> filter());
+        emailInfixText.setOnKeyReleased(e -> filter());
+
+    }
+
+    private void initAndOr() {
+        AndOr.selectToggle(ORRadioButton);
+        AndOr.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+            if (AndOr.getSelectedToggle() != null) {
+                OR = AndOr.getSelectedToggle().toString().contains("OR");
+            }
+            filter();
+        });
+    }
+
+    private void initToolTips(){
+        choiceBox.setTooltip(salutationTooltip);
+        salutationTooltip = new Tooltip("Should be either \"Herr\" or \"Frau\" ");
+        salutationTooltip.setHideDelay(duration);
+        salutationTooltip.setShowDuration(showDuration);
+        emptyTooltip = new Tooltip("text field should not be empty");
+        emptyTooltip.setHideDelay(duration);
+        emptyTooltip.setShowDuration(showDuration);
+        birthdayTooltip = new Tooltip("birthday should be from the format: dd.MM.yyyy ");
+        birthdayTooltip.setHideDelay(duration);
+        birthdayTooltip.setShowDuration(showDuration);
+        zipCodeTooltip = new Tooltip("Zip code must be a number");
+        zipCodeTooltip.setHideDelay(duration);
+        zipCodeTooltip.setShowDuration(showDuration);
+        emailTooltip = new Tooltip("E-Mail should be from the format: x@y.z");
+        emailTooltip.setHideDelay(duration);
+        emailTooltip.setShowDuration(showDuration);
+        phoneTooltip = new Tooltip("Text field should includes only numbers [0-9]");
+        phoneTooltip.setHideDelay(duration);
+        phoneTooltip.setShowDuration(showDuration);
+    }
+
+    private void initTextFields() {
+        //Salutation
+        choiceBox.setOnMouseClicked(e -> choiceBox.setStyle("-fx-border-color: gainsboro"));
+        choiceBox.setOnMouseEntered(e -> choiceBox.setTooltip(salutationTooltip));
+        //firstName
+        firstNameText.setOnKeyTyped(e -> firstNameText.setStyle("-fx-border-color: gainsboro"));
+        firstNameText.setOnMouseEntered(e -> firstNameText.setTooltip(emptyTooltip));
+        //LastName
+        lastNameText.setOnKeyTyped(e -> lastNameText.setStyle("-fx-border-color: gainsboro"));
+        lastNameText.setOnMouseEntered(e -> lastNameText.setTooltip(emptyTooltip));
+        //BirthdayPicker
+        birthdayDatePicker.setOnKeyTyped(e -> birthdayDatePicker.setStyle("-fx-border-color: gainsboro"));
+        birthdayDatePicker.setOnAction(e -> birthdayDatePicker.setStyle("-fx-border-color: gainsboro"));
+        birthdayDatePicker.getEditor().setOnMouseClicked(e -> birthdayDatePicker.setStyle("-fx-border-color: gainsboro"));
+        birthdayDatePicker.setOnMouseEntered(e -> birthdayDatePicker.setTooltip(birthdayTooltip));
+        //streetAddress
+        streetAddressText.setOnKeyTyped(e -> streetAddressText.setStyle("-fx-border-color: gainsboro"));
+        streetAddressText.setOnMouseEntered(e -> streetAddressText.setTooltip(emptyTooltip));
+        //zipCode
+        zipCodeText.setOnKeyTyped(e -> zipCodeText.setStyle("-fx-border-color: gainsboro"));
+        zipCodeText.setOnMouseEntered(e -> zipCodeText.setTooltip(zipCodeTooltip));
+        //City
+        cityText.setOnKeyTyped(e -> cityText.setStyle("-fx-border-color: gainsboro"));
+        cityText.setOnMouseEntered(e -> cityText.setTooltip(emptyTooltip));
+        //E-Mail
+        emailText.setOnKeyTyped(e -> emailText.setStyle("-fx-border-color: gainsboro"));
+        emailText.setOnMouseEntered(e -> emailText.setTooltip(emailTooltip));
+        //Phone
+        phoneText.setOnKeyTyped(e -> phoneText.setStyle("-fx-border-color: gainsboro"));
+        phoneText.setOnMouseEntered(e -> phoneText.setTooltip(phoneTooltip));
+        //YearFilter
+        yearOfBirthText.setOnKeyTyped(e -> yearOfBirthText.setStyle("-fx-border-color: gainsboro"));
+        //ZipCodeFilter
+        zipCodePredicateText.setOnKeyTyped(e -> zipCodePredicateText.setStyle("-fx-border-color: gainsboro"));
+        zipCodePredicateText.setOnMouseEntered(e -> zipCodePredicateText.setTooltip(zipCodeTooltip));
+    }
+
+    private void initTable() {
+        table.setRowFactory(tv -> {
+            TableRow<Contact> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 1) {
+                    Contact clickedRow = row.getItem();
+                    fillTheBlanks(clickedRow);
+                }
+            });
+            return row;
+        });
+        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        salutationColumn.setCellValueFactory(new PropertyValueFactory<>("salutation"));
+        addressBook.addContactAddedListner(contact -> {
+            table.getItems().add(contact);
+            Collections.sort(table.getItems(), contactComparator);
+        });
+    }
+
+    private void fillTheBlanks(Contact contact) {   //fills all the text fields
+        colorWhite();
+        choiceBox.setValue(contact.getSalutation().toString());
+        firstNameText.setText(contact.getFirstName());
+        lastNameText.setText(contact.getLastName());
+        birthdayDatePicker.setValue(contact.getBirthday());
+        streetAddressText.setText(contact.getStreetAddress());
+        zipCodeText.setText(Integer.toString(contact.getZipCode()));
+        cityText.setText(contact.getCity());
+        if (contact.getEMail().isPresent()) {
+            emailText.setText(contact.getEMail().get());
+        } else {
+            emailText.setText("");
+        }
+        if (contact.getPhone().isPresent()) {
+            phoneText.setText(Long.toString(contact.getPhone().get()));
+        } else {
+            phoneText.setText("");
+        }
+
+    }
+
+    private void colorWhite() {
+        choiceBox.setStyle("-fx-border-color: gainsboro");
+        firstNameText.setStyle("-fx-border-color: gainsboro");
+        lastNameText.setStyle("-fx-border-color: gainsboro");
+        birthdayDatePicker.setStyle("-fx-border-color: gainsboro");
+        birthdayDatePicker.setStyle("-fx-border-color: gainsboro");
+        streetAddressText.setStyle("-fx-border-color: gainsboro");
+        zipCodeText.setStyle("-fx-border-color: gainsboro");
+        cityText.setStyle("-fx-border-color: gainsboro");
+        emailText.setStyle("-fx-border-color: gainsboro");
+        phoneText.setStyle("-fx-border-color: gainsboro");
+    }
+
+    private void clearTheBlanks() {
+        choiceBox.setValue(null);
+        firstNameText.setText("");
+        lastNameText.setText("");
+        birthdayDatePicker.setValue(null);
+        streetAddressText.setText("");
+        zipCodeText.setText("");
+        cityText.setText("");
+        emailText.setText("");
+        phoneText.setText("");
+    }
+
+    //IMPORT && EXPORT
+    private void initImportButton() {
+        importButton.setOnAction(actionEvent -> {
+            try {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open Resource File");
+                File f = fileChooser.showOpenDialog(new Stage());
+                if (f == null) {
+                    return;
+                }
+                if (!f.getName().contains(".csv")) {
+                    throw new IllegalArgumentException("Not a csv file");
+                }
+                InputStream inputStream = new FileInputStream(f);
+                String datei = new String(inputStream.readAllBytes());
+                if (datei.isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("File is empty!");
+                    alert.showAndWait();
+                    return;
+                }
+                addressBook.importContacts(datei);
+//                if (!sureImport){
+//                    return;
+//                }
+                table.getItems().sort(contactComparator);
+                colorWhite();
+                //contacts imported successfully
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText("Information");
+                String added = addressBook.added > 0 ? addressBook.added + " new contacts have been added successfully!\n" : "No contacts have been added!\n";
+                String overwritten = addressBook.overwritten > 0 ? addressBook.overwritten + " existing contacts have been overwritten!" : "No contacts have been overwritten!";
+                alert.setContentText(added + overwritten);
+                alert.showAndWait();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("file should be from typ .csv");
+                alert.show();
+
+            }
+        });
+    }
+
+    private void initExportButton() {
+        exportButton.setOnAction(e -> {
+            try {
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("CSV files(*.csv)", "*.csv", "*.csv", "*.csv");
+                fileChooser.getExtensionFilters().add(filter);
+                fileChooser.setSelectedExtensionFilter(filter);
+                File file = fileChooser.showSaveDialog(new Stage());
+                if (file == null) {
+                    return;
+                }
+                List<Integer> ids = new ArrayList<>();
+                Map<Integer, Contact> contactMap = new HashMap<>();
+                for (Contact contact : addressBook.getContacts()) {
+                    ids.add(contact.getId());
+                    contactMap.put(contact.getId(), contact);
+                }
+                String res = Writer.export(contactMap, ids);
+                FileWriter fileWriter = new FileWriter(file);
+                fileWriter.write(res);
+//                FileOutputStream fileOutputStream = new FileOutputStream(file);
+//                fileOutputStream.write(res.getBytes());
+            } catch (Exception exception) {
+
+            }
+        });
+    }
+
+//    public static void areYouSureYouWannaImport(){
+//        YesNoAlertBox.display("Import","Some contacts are going to be overwritten!\nDo you want to continue?");
+//        sureImport = YesNoAlertBox.answer;
+//    }
+
+    //ADD && DELETE && UPDATE
+    private void initChoiceBox() {
+        ObservableList<String> temp = FXCollections.observableArrayList();
+        String herr = Salutation.HERR.toString();
+        String frau = Salutation.FRAU.toString();
+        temp.addAll(herr, frau);
+        choiceBox.getItems().addAll(temp);
+    }
+
+    private void initDeleteButton() {
+        deleteButton.setOnAction(e -> {
+            Contact selected = table.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                YesNoAlertBox.display("Delete contact","Are you sure you want to delete the selected contact?");
+                if (YesNoAlertBox.answer){
+                    addressBook.removeContact(selected);
+                    table.getItems().remove(selected);
+                    clearTheBlanks();
+                    table.getSelectionModel().clearSelection();
+                    table.getItems().sort(contactComparator);
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error");
+                alert.setContentText("No contact is selected!");
+                alert.showAndWait();
+            }
+
+        });
+    }
+
+    private void initNewButton() {
+        newButton.setOnAction(e -> {
+            if (check_ifValid()) {
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    ThreeButtonAlertBox.display("", "Do you want to update the selected contact or create a new one?", "Create new", "Update", "Cancel");
+                    switch (ThreeButtonAlertBox.answer) {
+                        case 0:
+                            addContact();
+                            break;
+                        case 1:
+                            updateContact();
+                            break;
+                    }
+                    //update, new or nothing?
+                } else {
+                    YesNoAlertBox.display("", "Do you want to create new contact?");
+                    if (YesNoAlertBox.answer) {
+                        addContact();
+                    }
+                }
+            }
+
+
+        });
+    }
+
+    private boolean check_ifValid() {
+        boolean res = true;
+        if (!Helper.check_salutation(choiceBox.getValue())) {
+            res = false;
+            choiceBox.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_empty(firstNameText.getText())) {
+            res = false;
+            firstNameText.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_empty(lastNameText.getText())) {
+            res = false;
+            lastNameText.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_birthday(birthdayDatePicker.getValue(), birthdayDatePicker.getEditor().getText())) {
+            res = false;
+            birthdayDatePicker.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_empty(streetAddressText.getText())) {
+            res = false;
+            streetAddressText.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_zipCode(zipCodeText.getText())) {
+            res = false;
+            zipCodeText.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_empty(cityText.getText())) {
+            res = false;
+            cityText.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_email(emailText.getText())) {
+            res = false;
+            emailText.setStyle("-fx-border-color: red");
+        }
+        if (!Helper.check_phoneNumber(phoneText.getText())) {
+            res = false;
+            phoneText.setStyle("-fx-border-color: red");
+        }
+        return res;
+    }
+
+    private void addContact() {
+        Salutation salutation = Salutation.valueOf(choiceBox.getValue().toUpperCase());
+        String number = phoneText.getText();
+        Optional<Long> phoneNumber;
+        if (number.isEmpty()) {
+            phoneNumber = Optional.empty();
+        } else {
+            phoneNumber = Optional.of(Long.parseLong(number));
+        }
+        ContactImpl contact = new ContactImpl(
+                addressBook.getSmallestUnusedId(),
+                salutation,
+                firstNameText.getText(),
+                lastNameText.getText(),
+                birthdayDatePicker.getValue(),
+                streetAddressText.getText(),
+                Integer.parseInt(zipCodeText.getText()),
+                cityText.getText(),
+                phoneNumber,
+                Optional.ofNullable(emailText.getText())
+        );
+        addressBook.addContact(contact);
+    }
+
+    private void updateContact() {
+        Contact aktuell = table.getSelectionModel().getSelectedItem();
+        Salutation salutation = Salutation.valueOf(choiceBox.getValue().toUpperCase());
+        String number = phoneText.getText();
+        Long phoneNumber;
+        if (number.isEmpty()) {
+            phoneNumber = null;
+        } else {
+            phoneNumber = Long.parseLong(number);
+        }
+        aktuell.setSalutation(salutation);
+        aktuell.setFirstName(firstNameText.getText());
+        aktuell.setLastName(lastNameText.getText());
+        aktuell.setBirthday(birthdayDatePicker.getValue());
+        aktuell.setStreetAddress(streetAddressText.getText());
+        aktuell.setZipCode(Integer.parseInt(zipCodeText.getText()));
+        aktuell.setCity(cityText.getText());
+        aktuell.setPhone(phoneNumber);
+        aktuell.setEMail(emailText.getText());
+        table.refresh();
+        table.getSelectionModel().clearSelection();
+
+    }
+
+    private void initStatisticsButton() {
+        showStatisticsButton.setOnAction(e -> {
+            if (addressBook.getContacts().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Address book has no contacts!");
+                alert.show();
+                return;
+            }
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            VBox vBox = new VBox();
+            HBox hBox = new HBox();
+            vBox.setCenterShape(true);
+
+            PieChart mailStats = initMailStats();
+            PieChart salutationStats = initSalutationStats();
+            hBox.getChildren().addAll(mailStats, salutationStats);
+            Label durschnitt = new Label();
+            durschnitt.setAlignment(Pos.CENTER);
+            durschnitt.setText("Average age of contacts is " + bookUtil.getAverageAgeAt(LocalDate.now()));
+            vBox.getChildren().addAll(durschnitt, hBox);
+            vBox.setAlignment(Pos.CENTER);
+            Scene scene = new Scene(vBox);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+        });
+    }
+
+    private PieChart initSalutationStats() {
+        PieChart pieChart = new PieChart();
+        double herr = bookUtil.getSalutationShare(Salutation.HERR);
+        double frau = bookUtil.getSalutationShare(Salutation.FRAU);
+
+        pieChart.getData().addAll(new PieChart.Data("Herr", herr), new PieChart.Data("Frau", frau));
+        pieChart.setTitle("Salutation");
+        pieChart.setLegendSide(Side.BOTTOM);
+        pieChart.setLabelsVisible(false);
+        pieChart.setClockwise(true);
+        return pieChart;
+    }
+
+    private PieChart initMailStats() {
+        PieChart pieChart = new PieChart();
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
+        Map<String, Double> mailProviders = bookUtil.getMailProviderShare();
+        for (String mail : mailProviders.keySet()) {
+            if (mail.isEmpty()) {
+                data.add(new PieChart.Data("no mail", mailProviders.get(mail)));
+            } else {
+                data.add(new PieChart.Data(mail, mailProviders.get(mail)));
+            }
+        }
+        pieChart.setData(data);
+        pieChart.setTitle("E-mail providers");
+        pieChart.setLegendSide(Side.BOTTOM);
+        pieChart.setLabelsVisible(false);
+        pieChart.setClockwise(true);
+        return pieChart;
+    }
+
+
+    //FILTERS
+    private void filter() {
+        Set<Predicate<Contact>> predicate = new HashSet<>();
+        if (lastNamePrefixCheckBox.isSelected()) {
+            String prefix = lastNameprefixText.getText().isEmpty() ? "" : lastNameprefixText.getText();
+            predicate.add(bookUtil.lastNamePrefixFilter(prefix));
+        }
+        if (yearOfBirthCheckBox.isSelected()) {
+            if (Helper.check_year(yearOfBirthText.getText())) {
+                yearOfBirthText.setStyle("-fx-border-color: gainsboro");
+                predicate.add(bookUtil.birthYearFilter(Year.parse(yearOfBirthText.getText())));
+            } else {
+                yearOfBirthText.setStyle("-fx-border-color: red");
+            }
+        }
+        if (zipCodeCheckBox.isSelected()) {
+            if (Helper.check_zipCode(zipCodePredicateText.getText())) {
+                zipCodePredicateText.setStyle("-fx-border-color: gainsboro");
+                predicate.add(bookUtil.zipCodeFilter(Integer.parseInt(zipCodePredicateText.getText())));
+            } else {
+                zipCodePredicateText.setStyle("-fx-border-color: red");
+            }
+        }
+        if (emailInifixCheckBox.isSelected()) {
+            String infix = emailInfixText.getText();
+            if (infix != null) {
+                predicate.add(bookUtil.eMailInfixFilter(infix));
+            }
+        }
+
+
+        if (OR) {
+            filterOr(predicate);
+        } else {
+            filterAnd(predicate);
+        }
+    }
+
+    private void filterAnd(Set<Predicate<Contact>> predicates) {
+        ObservableList<Contact> data = FXCollections.observableArrayList();
+        Set<Contact> contacts = bookUtil.filterAnd(predicates);
+        data.addAll(contacts);
+        table.setItems(data);
+        Collections.sort(table.getItems(), contactComparator);
+    }
+
+    private void filterOr(Set<Predicate<Contact>> predicates) {
+        ObservableList<Contact> data = FXCollections.observableArrayList();
+        Set<Contact> contacts = bookUtil.filterOr(predicates);
+        data.addAll(contacts);
+        table.setItems(data);
+        Collections.sort(table.getItems(), contactComparator);
+
+    }
+
+
+}
